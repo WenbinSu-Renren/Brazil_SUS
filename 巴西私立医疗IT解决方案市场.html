@@ -1,0 +1,631 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>巴西私立医疗IT市场交互式应用</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+SC:wght@300;400;500;700&display=swap" rel="stylesheet">
+    <!-- Visualization & Content Choices:
+        - Market Stats (GDP, Hospitals, Insurance Co.s, IT Market): Inform -> Single Big Number -> HTML/Tailwind. Justification: Quick, impactful display of key figures.
+        - Insurance Fragmentation: Compare -> Donut Chart -> Chart.js (Canvas). Justification: Clearly shows proportions of market share.
+        - Digital Adoption (EHR, Internet, Computer): Inform -> Single Big Number -> HTML/Tailwind. Justification: Highlights adoption rates.
+        - Digital Maturity Index: Compare -> Horizontal Bar Chart -> Chart.js (Canvas). Justification: Effective for comparing maturity levels.
+        - TOTVS ERP Share: Inform -> Donut Chart -> Chart.js (Canvas). Justification: Shows dominant market share.
+        - Key Providers: Organize -> Table -> HTML/Tailwind. Justification: Structured comparison of vendors.
+        - TISS Components: Organize -> Diagram (HTML/CSS Boxes & Arrows) -> HTML/Tailwind. Justification: Visualizes standard structure without SVG/Mermaid.
+        - Big Data/AI Stats: Inform -> Single Big Number / Small Donut -> HTML/Tailwind / Chart.js. Justification: Concise display of adoption.
+        - Lists (Trends, Challenges, Recommendations): Inform/Organize -> Styled Lists (Unicode icons) -> HTML/Tailwind. Justification: Clear, readable presentation.
+        - Security Training: Compare -> Bar Chart -> Chart.js (Canvas). Justification: Compares training rates.
+        - Healthtech Investment Focus: Compare -> Donut Chart -> Chart.js (Canvas). Justification: Shows investment distribution.
+        - All charts use Chart.js (Canvas) for interactivity and dynamic updates, adhering to NO SVG/Mermaid.
+    -->
+    <style>
+        body {
+            font-family: 'Noto Sans SC', sans-serif;
+            background-color: #FDFBF7; /* Warm Off-White */
+            color: #4A4A4A; /* Dark Grey */
+        }
+        .chart-container {
+            position: relative;
+            width: 100%;
+            max-width: 550px; /* Adjusted for a slightly more compact feel */
+            margin-left: auto;
+            margin-right: auto;
+            height: 280px; /* Base height */
+            max-height: 350px;
+        }
+        @media (min-width: 768px) {
+            .chart-container {
+                height: 320px;
+            }
+        }
+        @media (min-width: 1024px) {
+            .chart-container {
+                height: 350px;
+            }
+        }
+        .sticky-nav {
+            position: -webkit-sticky; /* Safari */
+            position: sticky;
+            top: 0;
+            z-index: 50;
+            background-color: #70A0AF; /* Muted Teal/Blue for Nav Background */
+            box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+        }
+        .nav-link {
+            color: #FDFBF7; /* Warm Off-White for Nav Text */
+            transition: background-color 0.3s ease;
+        }
+        .nav-link:hover {
+            background-color: #5A8A99; /* Darker Teal/Blue on hover */
+        }
+        .stat-card {
+            background-color: #FFFFFF;
+            border-radius: 0.5rem;
+            border: 1px solid #E0E0E0; /* Subtle Accent Border */
+            box-shadow: 0 2px 8px rgba(0,0,0,0.05);
+            padding: 1.5rem;
+            margin-bottom: 1.5rem;
+            text-align: center;
+        }
+        .stat-value {
+            font-size: 2rem; /* text-3xl */
+            font-weight: 700; /* font-bold */
+            color: #A95C68; /* Muted Berry/Rose for important stats */
+        }
+        .stat-label {
+            font-size: 0.875rem; /* text-sm */
+            color: #6B7280; /* Gray 500 */
+            margin-top: 0.5rem;
+        }
+        .section-title {
+            font-size: 1.75rem; /* text-2xl */
+            font-weight: 600; /* font-semibold */
+            color: #70A0AF; /* Muted Teal/Blue */
+            margin-bottom: 1.5rem;
+            padding-bottom: 0.75rem;
+            border-bottom: 2px solid #D4A373; /* Warm Tan/Light Brown */
+        }
+        .content-card {
+            background-color: #FFFFFF;
+            border-radius: 0.5rem;
+            border: 1px solid #E0E0E0; /* Subtle Accent Border */
+            box-shadow: 0 4px 12px rgba(0,0,0,0.07);
+            padding: 1.5rem;
+            margin-bottom: 2rem;
+        }
+        .list-item-icon {
+            color: #D4A373; /* Warm Tan/Light Brown */
+            margin-right: 0.75rem;
+            font-size: 1.1em;
+        }
+        .tiss-component-container {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+        }
+        .tiss-component {
+            border: 2px solid #70A0AF; /* Muted Teal/Blue */
+            background-color: #EFF6FF; /* Light Blue variant */
+            color: #4A4A4A;
+            padding: 0.75rem 1rem;
+            border-radius: 0.375rem; /* rounded-md */
+            text-align: center;
+            margin-bottom: 0.5rem;
+            font-weight: 500;
+            width: 80%;
+            max-width: 300px;
+        }
+        .tiss-arrow {
+            font-size: 1.5rem;
+            color: #70A0AF; /* Muted Teal/Blue */
+            margin: 0.1rem 0;
+            text-align: center;
+        }
+        .table-header {
+            background-color: #70A0AF; /* Muted Teal/Blue */
+            color: #FDFBF7; /* Warm Off-White */
+        }
+        .table-cell {
+            border: 1px solid #E0E0E0; /* Subtle Accent */
+            padding: 0.75rem;
+        }
+    </style>
+</head>
+<body class="antialiased">
+
+    <nav class="sticky-nav p-3">
+        <div class="container mx-auto flex flex-wrap justify-center items-center text-sm">
+            <a href="#overview" class="nav-link px-3 py-2 rounded-md font-medium">市场概览</a>
+            <a href="#maturity" class="nav-link px-3 py-2 rounded-md font-medium">数字化成熟度</a>
+            <a href="#providers" class="nav-link px-3 py-2 rounded-md font-medium">主要供应商</a>
+            <a href="#tiss" class="nav-link px-3 py-2 rounded-md font-medium">TISS标准</a>
+            <a href="#advanced-platforms" class="nav-link px-3 py-2 rounded-md font-medium">高级平台</a>
+            <a href="#trends-challenges" class="nav-link px-3 py-2 rounded-md font-medium">趋势与挑战</a>
+            <a href="#investment-outlook" class="nav-link px-3 py-2 rounded-md font-medium">投资与展望</a>
+        </div>
+    </nav>
+
+    <div class="container mx-auto p-4 md:p-6 lg:p-8">
+
+        <header class="text-center my-8 md:my-12">
+            <h1 class="text-3xl md:text-4xl font-bold" style="color: #A95C68;">巴西私立医疗IT解决方案市场</h1>
+            <p class="text-lg text-gray-600 mt-2">交互式报告：行业趋势与市场研究</p>
+        </header>
+
+        <section id="overview" class="mb-10 scroll-mt-20">
+            <h2 class="section-title">市场概览</h2>
+            <div class="content-card">
+                <p class="mb-6 text-gray-700 leading-relaxed">本部分概述了巴西私立医疗IT市场的宏观环境，包括其在国民经济中的体量、私立医疗机构的占比，以及市场结构特点。了解这些基础信息有助于把握IT解决方案在该领域的需求背景和发展潜力。</p>
+                <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4 md:gap-6 mb-8">
+                    <div class="stat-card">
+                        <div class="stat-value">9.47%</div>
+                        <div class="stat-label">医疗总支出占GDP比例</div>
+                    </div>
+                    <div class="stat-card">
+                        <div class="stat-value">62%</div>
+                        <div class="stat-label">私立医院占比</div>
+                    </div>
+                    <div class="stat-card">
+                        <div class="stat-value">710</div>
+                        <div class="stat-label">家健康保险供应商</div>
+                    </div>
+                    <div class="stat-card">
+                        <div class="stat-value">121亿</div>
+                        <div class="stat-label">美元医疗设备与健康IT市场(2022)</div>
+                    </div>
+                </div>
+                <div class="grid grid-cols-1 md:grid-cols-2 gap-6 md:gap-8 items-center">
+                    <div>
+                        <h3 class="text-xl font-semibold mb-2" style="color: #70A0AF;">保险市场分散化特征</h3>
+                        <p class="text-gray-700 mb-4 text-sm leading-relaxed">巴西健康保险市场高度分散。报告指出，即使是最大的七家保险运营商也仅占据约29.2%的受益人市场份额，而最大的单一公司份额不足8%。这种分散性为IT供应商带来了适应多样化需求和复杂集成的挑战与机遇。</p>
+                    </div>
+                    <div class="chart-container">
+                        <canvas id="insuranceMarketShareChart"></canvas>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <section id="maturity" class="mb-10 scroll-mt-20">
+            <h2 class="section-title">数字化成熟度与采纳</h2>
+            <div class="content-card">
+                <p class="mb-6 text-gray-700 leading-relaxed">巴西私立医疗机构在基础数字化方面取得进展，但整体成熟度参差不齐。本节将探讨关键技术的采用率以及医疗机构在数字化转型道路上的成熟度水平，揭示从基础应用向战略性数字化迈进的机遇。</p>
+                <div class="grid grid-cols-1 sm:grid-cols-3 gap-4 md:gap-6 mb-8">
+                    <div class="stat-card">
+                        <div class="stat-value">91%</div>
+                        <div class="stat-label">私立机构采用电子患者记录(2022)</div>
+                    </div>
+                     <div class="stat-card">
+                        <div class="stat-value">99%</div>
+                        <div class="stat-label">医疗机构接入互联网(2023)</div>
+                    </div>
+                    <div class="stat-card">
+                        <div class="stat-value">98%</div>
+                        <div class="stat-label">医疗机构使用计算机(2023)</div>
+                    </div>
+                </div>
+                <div class="grid grid-cols-1 md:grid-cols-2 gap-6 md:gap-8 items-center">
+                    <div>
+                        <h3 class="text-xl font-semibold mb-2" style="color: #70A0AF;">数字化成熟度指数评估</h3>
+                        <p class="text-gray-700 mb-4 text-sm leading-relaxed">尽管基础数字化普及，但一项针对189家医院的评估显示，平均数字成熟度指数为46.19%。仅14%的医院展现出“受治理的数字成熟度”。这表明市场在利用技术进行战略重塑和高级决策支持方面仍有巨大提升空间。</p>
+                    </div>
+                    <div class="chart-container">
+                        <canvas id="digitalMaturityChart"></canvas>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <section id="providers" class="mb-10 scroll-mt-20">
+            <h2 class="section-title">主要IT解决方案供应商</h2>
+            <div class="content-card">
+                <p class="mb-6 text-gray-700 leading-relaxed">巴西私立医疗IT市场由本土领军企业和国际巨头共同塑造。本节将介绍主要供应商及其市场定位，并分析TISS合规性在供应商格局中的重要性，以及并购活动对市场的影响。</p>
+                <div class="grid grid-cols-1 md:grid-cols-2 gap-6 md:gap-8 mb-8 items-center">
+                    <div>
+                        <h3 class="text-xl font-semibold mb-2" style="color: #70A0AF;">TOTVS ERP 市场份额</h3>
+                        <p class="text-gray-700 mb-4 text-sm leading-relaxed">本土ERP巨头TOTVS在整体ERP市场占据主导，其“Saúde”（健康）部门为医疗机构提供符合TISS标准的全面解决方案。</p>
+                        <div class="chart-container h-56 sm:h-64">
+                            <canvas id="totvsMarketShareChart"></canvas>
+                        </div>
+                    </div>
+                    <div>
+                        <h3 class="text-xl font-semibold mb-2" style="color: #70A0AF;">EHR市场领导者</h3>
+                        <p class="text-gray-700 mb-4 text-sm leading-relaxed">2023年巴西EHR市场价值超5000万美元，Oracle Cerner在此市场领先。这反映了国际供应商在先进临床系统领域的影响力。</p>
+                        <div class="stat-card mt-4">
+                            <div class="stat-value">>5000万</div>
+                            <div class="stat-label">美元巴西EHR市场价值 (2023)</div>
+                        </div>
+                    </div>
+                </div>
+
+                <h3 class="text-xl font-semibold my-6 text-center" style="color: #70A0AF;">主要供应商概览 (基于报告表1)</h3>
+                <div class="overflow-x-auto">
+                    <table class="min-w-full bg-white border border-gray-200 text-sm">
+                        <thead class="table-header">
+                            <tr>
+                                <th class="table-cell text-left">供应商名称</th>
+                                <th class="table-cell text-left">来源</th>
+                                <th class="table-cell text-left">主要解决方案</th>
+                                <th class="table-cell text-left">TISS合规状态</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr>
+                                <td class="table-cell font-medium">TOTVS</td>
+                                <td class="table-cell">本土</td>
+                                <td class="table-cell">HIS/ERP, PEP, 财务, TISS模块</td>
+                                <td class="table-cell">明确说明</td>
+                            </tr>
+                            <tr>
+                                <td class="table-cell font-medium">MV Sistemas</td>
+                                <td class="table-cell">本土</td>
+                                <td class="table-cell">SOUL MV (HIS, PEP, RCM)</td>
+                                <td class="table-cell">市场功能暗示</td>
+                            </tr>
+                            <tr>
+                                <td class="table-cell font-medium">Oracle Cerner</td>
+                                <td class="table-cell">国际</td>
+                                <td class="table-cell">EHR (市场领导者), 临床应用</td>
+                                <td class="table-cell">市场功能暗示</td>
+                            </tr>
+                            <tr>
+                                <td class="table-cell font-medium">Philips (Tasy EMR)</td>
+                                <td class="table-cell">国际</td>
+                                <td class="table-cell">Tasy EMR (ANVISA II类), AI助手</td>
+                                <td class="table-cell">市场功能暗示</td>
+                            </tr>
+                            <tr>
+                                <td class="table-cell font-medium">Constellation (Matrix)</td>
+                                <td class="table-cell">国际 (收购)</td>
+                                <td class="table-cell">临床实验室信息系统 (LIS)</td>
+                                <td class="table-cell">未明确 (LIS需集成)</td>
+                            </tr>
+                            <tr>
+                                <td class="table-cell font-medium">Concentrix</td>
+                                <td class="table-cell">国际</td>
+                                <td class="table-cell">EHR (市场第二)</td>
+                                <td class="table-cell">市场功能暗示</td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+                 <p class="mt-4 text-xs text-gray-600 leading-relaxed">注：上表信息基于报告提炼，TISS合规状态的“市场功能暗示”指供应商市场地位或产品功能表明其可能符合TISS，但报告未提供明确声明。</p>
+            </div>
+        </section>
+
+        <section id="tiss" class="mb-10 scroll-mt-20">
+            <h2 class="section-title">TISS标准：互操作性的基石</h2>
+            <div class="content-card">
+                <p class="mb-6 text-gray-700 leading-relaxed">TISS标准是巴西私立医疗IT生态的核心，由国家补充卫生局(ANS)强制推行，旨在规范健康数据的电子交换。它对促进互操作性、确保信息安全以及与《通用数据保护法》(LGPD)协调至关重要。本节将解析TISS的核心组成部分及其影响。</p>
+                <div class="text-center mb-6">
+                    <span class="inline-block bg-blue-100 text-blue-800 text-sm font-semibold px-3 py-1 rounded-full" style="background-color: #D4A373; color: #4A4A4A;">ANS RN 501号决议：TISS强制地位</span>
+                </div>
+                <h3 class="text-xl font-semibold mb-4 text-center" style="color: #70A0AF;">TISS标准核心组成部分</h3>
+                <div class="tiss-component-container">
+                    <div class="tiss-component">1. 组织部分 (操作规则)</div>
+                    <div class="tiss-arrow">↓</div>
+                    <div class="tiss-component">2. 内容与结构部分 (XML数据架构)</div>
+                    <div class="tiss-arrow">↓</div>
+                    <div class="tiss-component">3. 健康概念表述部分 (TUSS术语)</div>
+                    <div class="tiss-arrow">↓</div>
+                    <div class="tiss-component">4. 安全与隐私部分 (基于LGPD)</div>
+                    <div class="tiss-arrow">↓</div>
+                    <div class="tiss-component">5. 通讯部分 (电子消息通讯)</div>
+                </div>
+                <p class="mt-6 text-gray-700 leading-relaxed text-sm">TISS不仅规范了行政和临床数据交换，也为IT市场创造了秩序，推动了行业的计算机化。符合TISS标准的系统还必须具备强大的LGPD合规功能。未来，TISS数据有望与国家健康数据网络(RNDS)整合，实现更广泛的互操作性。</p>
+            </div>
+        </section>
+
+        <section id="advanced-platforms" class="mb-10 scroll-mt-20">
+            <h2 class="section-title">高级医疗平台机遇</h2>
+            <div class="content-card">
+                <p class="mb-6 text-gray-700 leading-relaxed">随着技术进步，巴西私立医疗市场在人口健康管理大数据分析和个性化医疗等高级功能平台方面展现出显著机遇，尽管这些领域仍处于发展初期。本节探讨这些平台的潜力、应用场景、技术驱动因素以及面临的挑战。</p>
+                <div class="grid grid-cols-1 md:grid-cols-2 gap-6 md:gap-8">
+                    <div>
+                        <h3 class="text-xl font-semibold mb-3" style="color: #70A0AF;">人口健康管理大数据分析</h3>
+                        <div class="flex flex-wrap gap-4 mb-4">
+                            <div class="stat-card p-3 flex-1 min-w-[120px]">
+                                <div class="stat-value text-2xl">4%</div>
+                                <div class="stat-label text-xs">医疗机构进行大数据分析</div>
+                            </div>
+                            <div class="stat-card p-3 flex-1 min-w-[120px]">
+                                <div class="stat-value text-2xl">6.65%</div>
+                                <div class="stat-label text-xs">健康科技公司涉足AI/大数据</div>
+                            </div>
+                        </div>
+                        <p class="text-gray-700 mb-2 text-sm"><strong>主要应用:</strong> 疾病模式识别, 流行病预测, 资源优化, 风险分层。</p>
+                        <p class="text-gray-700 mb-2 text-sm"><strong>赋能技术:</strong> AI/ML, IoT, EHRs, 云计算。</p>
+                        <p class="text-gray-700 text-sm"><strong>挑战:</strong> 数据质量, LGPD合规, 成本, 技能差距, AI伦理。</p>
+                    </div>
+                    <div>
+                        <h3 class="text-xl font-semibold mb-3" style="color: #70A0AF;">个性化医疗平台</h3>
+                         <p class="text-gray-700 mb-4 text-sm leading-relaxed">旨在为个体患者量身定制治疗方案，有望提高疗效并降低长期成本。</p>
+                        <p class="text-gray-700 mb-2 text-sm"><strong>关键技术:</strong> 基因组检测, 药物基因组学, AI与大数据, 集成数据平台 (EHRs)。</p>
+                        <p class="text-gray-700 mb-2 text-sm"><strong>潜力:</strong> 精准治疗 (尤其肿瘤学), 减少浪费, 加强预防。</p>
+                        <p class="text-gray-700 text-sm"><strong>挑战:</strong> 高昂初始成本, 数据集成, 伦理法规 (AI), 医患接受度。</p>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <section id="trends-challenges" class="mb-10 scroll-mt-20">
+            <h2 class="section-title">市场趋势与挑战</h2>
+            <div class="content-card">
+                 <p class="mb-6 text-gray-700 leading-relaxed">巴西私立医疗IT市场正经历深刻变革，受到技术创新、监管要求和市场需求的共同驱动。本节将梳理主要的数字化转型趋势，并剖析市场面临的总体挑战，特别是数据安全和互操作性问题。</p>
+                <div class="grid grid-cols-1 md:grid-cols-2 gap-6 md:gap-8">
+                    <div>
+                        <h3 class="text-xl font-semibold mb-3 flex items-center" style="color: #70A0AF;"><span class="list-item-icon">📈</span>主要数字化转型趋势</h3>
+                        <ul class="space-y-1.5 text-gray-700 text-sm">
+                            <li class="flex"><span class="list-item-icon">💻</span>远程医疗的扩展</li>
+                            <li class="flex"><span class="list-item-icon">📄</span>EHR的采用与演进</li>
+                            <li class="flex"><span class="list-item-icon">💡</span>AI和数据分析应用增加</li>
+                            <li class="flex"><span class="list-item-icon">🧑‍⚕️</span>通过数字工具赋能患者</li>
+                            <li class="flex"><span class="list-item-icon">☁️</span>云计算的普及</li>
+                            <li class="flex"><span class="list-item-icon">⌚</span>物联网的集成</li>
+                        </ul>
+                    </div>
+                    <div>
+                        <h3 class="text-xl font-semibold mb-3 flex items-center" style="color: #A95C68;"><span class="list-item-icon" style="color: #A95C68;">🚧</span>市场总体挑战</h3>
+                        <ul class="space-y-1.5 text-gray-700 text-sm">
+                            <li class="flex"><span class="list-item-icon" style="color: #A95C68;">💰</span>成本压力与可持续性</li>
+                            <li class="flex"><span class="list-item-icon" style="color: #A95C68;">📜</span>监管复杂性</li>
+                            <li class="flex"><span class="list-item-icon" style="color: #A95C68;">🛡️</span>数据安全与网络安全</li>
+                            <li class="flex"><span class="list-item-icon" style="color: #A95C68;">🔗</span>互操作性差距</li>
+                            <li class="flex"><span class="list-item-icon" style="color: #A95C68;">🌍</span>数字鸿沟与区域差异</li>
+                            <li class="flex"><span class="list-item-icon" style="color: #A95C68;">🎓</span>技能差距与变革管理</li>
+                        </ul>
+                    </div>
+                </div>
+                <div class="grid grid-cols-1 md:grid-cols-2 gap-6 md:gap-8 mt-8 items-center">
+                    <div>
+                        <h4 class="text-lg font-semibold mb-2" style="color: #70A0AF;">数据安全培训现状</h4>
+                        <p class="text-gray-700 mb-4 text-sm leading-relaxed">数据安全是主要问题，但仅约三分之一医疗机构提供信息安全培训。公共(16%)与私营(44%)部门间存在差距。网络风险是CEO面临的首要威胁。</p>
+                         <div class="stat-card mt-4">
+                            <div class="stat-value">11%</div>
+                            <div class="stat-label">机构投资于数字健康培训</div>
+                        </div>
+                    </div>
+                    <div class="chart-container h-56 sm:h-64">
+                        <canvas id="securityTrainingChart"></canvas>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <section id="investment-outlook" class="mb-10 scroll-mt-20">
+            <h2 class="section-title">投资与未来展望</h2>
+            <div class="content-card">
+                <p class="mb-6 text-gray-700 leading-relaxed">巴西在拉丁美洲健康科技投资中领先，市场兴趣依然存在。当前创新重点更多在于夯实数字化基础。本节将分析投资格局、未来增长预测，并为各利益相关者提供战略建议。</p>
+                <div class="grid grid-cols-1 md:grid-cols-2 gap-6 md:gap-8 items-center">
+                    <div>
+                        <h3 class="text-xl font-semibold mb-2" style="color: #70A0AF;">健康科技投资格局</h3>
+                        <div class="stat-card mb-4">
+                            <div class="stat-value">13.6亿</div>
+                            <div class="stat-label">美元健康科技投资 (自2019年)</div>
+                        </div>
+                        <p class="text-gray-700 mb-4 text-sm leading-relaxed">投资主要集中在早期阶段，SaaS和市场平台是常见模式。“管理与PEP”(电子病历) 是最大的健康科技类别(27.63%)，表明市场对改进基础运营和电子记录的需求巨大。</p>
+                    </div>
+                    <div class="chart-container h-56 sm:h-64">
+                        <canvas id="healthtechInvestmentChart"></canvas>
+                    </div>
+                </div>
+                <div class="mt-8">
+                    <h3 class="text-xl font-semibold mb-4 text-center" style="color: #70A0AF;">未来增长预测</h3>
+                    <div class="grid grid-cols-1 sm:grid-cols-3 gap-4">
+                        <div class="p-3 rounded-lg text-center" style="background-color: #E6FFFA; border: 1px solid #70A0AF;">
+                            <p class="text-xl font-bold" style="color: #4A4A4A;">15%</p>
+                            <p class="text-xs text-gray-600">全球健康IT市场年增长(至2025)</p>
+                        </div>
+                        <div class="p-3 rounded-lg text-center" style="background-color: #FFFBEB; border: 1px solid #D4A373;">
+                            <p class="text-xl font-bold" style="color: #4A4A4A;">41.7%</p>
+                            <p class="text-xs text-gray-600">医疗领域AI年增长</p>
+                        </div>
+                        <div class="p-3 rounded-lg text-center" style="background-color: #EFF6FF; border: 1px solid #70A0AF;">
+                            <p class="text-xl font-bold" style="color: #4A4A4A;">17.9%</p>
+                            <p class="text-xs text-gray-600">医疗物联网年增长(至2032)</p>
+                        </div>
+                    </div>
+                </div>
+                <div class="mt-8">
+                    <h3 class="text-xl font-semibold mb-3" style="color: #70A0AF;">对利益相关者的战略建议</h3>
+                    <ul class="list-disc list-inside text-gray-700 space-y-1 text-sm">
+                        <li><strong>供应商:</strong> 聚焦合规、安全、互操作，展示价值。</li>
+                        <li><strong>医疗服务提供者:</strong> 加强数字治理，提升数据管理，拥抱变革。</li>
+                        <li><strong>投资者:</strong> 关注解决痛点、具扩展性、合规的创新企业。</li>
+                    </ul>
+                </div>
+            </div>
+        </section>
+
+        <footer class="text-center mt-10 py-6 border-t border-gray-300">
+            <p class="text-xs text-gray-500">&copy; 2024 巴西私立医疗IT市场交互式应用。基于研究报告生成。</p>
+            <p class="text-xs text-gray-500 mt-1">所有数据和分析来源于“巴西私立医疗IT解决方案市场调研”报告。</p>
+        </footer>
+    </div>
+
+    <script>
+        const primaryAccent = '#70A0AF'; // Muted Teal/Blue
+        const secondaryAccent = '#D4A373'; // Warm Tan/Light Brown
+        const callToActionColor = '#A95C68'; // Muted Berry/Rose
+        const subtleAccent = '#E0E0E0'; // Light Grey
+        const chartFontFamily = "'Noto Sans SC', sans-serif";
+
+        function wrapLabel(str, maxWidth = 16) { // Default maxWidth 16 for general use
+            if (typeof str !== 'string' || str.length <= maxWidth) {
+                return str;
+            }
+            const words = str.split(' ');
+            let currentLine = '';
+            const lines = [];
+            for (const word of words) {
+                if ((currentLine + word).length > maxWidth && currentLine.length > 0) {
+                    lines.push(currentLine.trim());
+                    currentLine = word + ' ';
+                } else {
+                    currentLine += word + ' ';
+                }
+            }
+            lines.push(currentLine.trim());
+            return lines;
+        }
+        
+        const tooltipTitleCallback = function(tooltipItems) {
+            const item = tooltipItems[0];
+            if (!item || !item.chart || !item.chart.data || !item.chart.data.labels) return '';
+            let label = item.chart.data.labels[item.dataIndex];
+            if (Array.isArray(label)) {
+              return label.join(' ');
+            }
+            return label || '';
+        };
+
+        const defaultChartOptions = {
+            responsive: true,
+            maintainAspectRatio: false,
+            plugins: {
+                legend: {
+                    position: 'bottom',
+                    labels: {
+                        font: { family: chartFontFamily, size: 10 },
+                        boxWidth: 15,
+                        padding: 15
+                    }
+                },
+                tooltip: {
+                    callbacks: { title: tooltipTitleCallback },
+                    bodyFont: { family: chartFontFamily },
+                    titleFont: { family: chartFontFamily }
+                }
+            },
+            scales: {
+                x: {
+                    ticks: {
+                        font: { family: chartFontFamily, size: 10 },
+                        callback: function(value) {
+                            const label = this.getLabelForValue(value);
+                            return wrapLabel(label, 10); // Wrap x-axis labels shorter
+                        }
+                    },
+                    grid: { display: false }
+                },
+                y: {
+                    ticks: { font: { family: chartFontFamily, size: 10 } },
+                    grid: { color: '#F0F0F0' } // Lighter grid lines
+                }
+            }
+        };
+
+        // 1. Insurance Market Share Chart
+        const insuranceMarketShareCtx = document.getElementById('insuranceMarketShareChart')?.getContext('2d');
+        if (insuranceMarketShareCtx) {
+            new Chart(insuranceMarketShareCtx, {
+                type: 'doughnut',
+                data: {
+                    labels: [wrapLabel('市场份额前7大运营商 (除最大外)', 20), wrapLabel('最大单一公司', 15), wrapLabel('其他',10)],
+                    datasets: [{
+                        label: '保险市场份额',
+                        data: [29.2 - 7.9, 7.9, 100 - 29.2],
+                        backgroundColor: [primaryAccent, callToActionColor, subtleAccent],
+                        borderColor: '#FDFBF7',
+                        borderWidth: 2,
+                        hoverOffset: 4
+                    }]
+                },
+                options: { ...defaultChartOptions, cutout: '60%' }
+            });
+        }
+
+        // 2. Digital Maturity Chart
+        const digitalMaturityCtx = document.getElementById('digitalMaturityChart')?.getContext('2d');
+        if (digitalMaturityCtx) {
+            new Chart(digitalMaturityCtx, {
+                type: 'bar',
+                data: {
+                    labels: [wrapLabel('平均数字成熟度指数', 20), wrapLabel('“受治理的”数字成熟度', 20)],
+                    datasets: [{
+                        label: '百分比 (%)',
+                        data: [46.19, 14],
+                        backgroundColor: [primaryAccent, secondaryAccent],
+                        borderRadius: 4
+                    }]
+                },
+                options: { ...defaultChartOptions, indexAxis: 'y', plugins: {...defaultChartOptions.plugins, legend: {display: false}} }
+            });
+        }
+
+        // 3. TOTVS Market Share Chart
+        const totvsMarketShareCtx = document.getElementById('totvsMarketShareChart')?.getContext('2d');
+        if (totvsMarketShareCtx) {
+            new Chart(totvsMarketShareCtx, {
+                type: 'doughnut',
+                data: {
+                    labels: [wrapLabel('TOTVS ERP 市场份额', 15), wrapLabel('其他',10)],
+                    datasets: [{
+                        label: '市场份额',
+                        data: [48, 52], // Report says 46-50%, using midpoint
+                        backgroundColor: [primaryAccent, subtleAccent],
+                        borderColor: '#FDFBF7',
+                        borderWidth: 2,
+                        hoverOffset: 4
+                    }]
+                },
+                options: { ...defaultChartOptions, cutout: '60%' }
+            });
+        }
+
+        // 6. Security Training Chart
+        const securityTrainingCtx = document.getElementById('securityTrainingChart')?.getContext('2d');
+        if (securityTrainingCtx) {
+            new Chart(securityTrainingCtx, {
+                type: 'bar',
+                data: {
+                    labels: [wrapLabel('私营部门提供培训', 12), wrapLabel('公共部门提供培训', 12), wrapLabel('整体平均(估)', 12)],
+                    datasets: [{
+                        label: '提供信息安全培训的机构比例 (%)',
+                        data: [44, 16, (44+16)/2], // Report says "about 1/3", this is an average for viz
+                        backgroundColor: [primaryAccent, secondaryAccent, callToActionColor],
+                        borderRadius: 4
+                    }]
+                },
+                options: { ...defaultChartOptions, plugins: {...defaultChartOptions.plugins, legend: {display: false}}, scales: {...defaultChartOptions.scales, y: {...defaultChartOptions.scales.y, suggestedMax: 50}} }
+            });
+        }
+        
+        // 7. Healthtech Investment Chart
+        const healthtechInvestmentCtx = document.getElementById('healthtechInvestmentChart')?.getContext('2d');
+        if (healthtechInvestmentCtx) {
+            new Chart(healthtechInvestmentCtx, {
+                type: 'pie',
+                data: {
+                    labels: [wrapLabel('管理与PEP (EHR)', 15), wrapLabel('AI与大数据', 12), wrapLabel('其他健康科技', 12)],
+                    datasets: [{
+                        label: '健康科技投资领域',
+                        data: [27.63, 6.65, 100 - 27.63 - 6.65],
+                        backgroundColor: [primaryAccent, secondaryAccent, subtleAccent],
+                        borderColor: '#FDFBF7',
+                        borderWidth: 2,
+                        hoverOffset: 4
+                    }]
+                },
+                options: defaultChartOptions
+            });
+        }
+
+        document.querySelectorAll('nav a[href^="#"]').forEach(anchor => {
+            anchor.addEventListener('click', function (e) {
+                e.preventDefault();
+                const targetId = this.getAttribute('href');
+                const targetElement = document.querySelector(targetId);
+                if (targetElement) {
+                    const navHeight = document.querySelector('nav').offsetHeight;
+                    const targetPosition = targetElement.getBoundingClientRect().top + window.pageYOffset - navHeight - 10; // 10px offset
+                    window.scrollTo({top: targetPosition, behavior: 'smooth'});
+                }
+            });
+        });
+    </script>
+</body>
+</html>

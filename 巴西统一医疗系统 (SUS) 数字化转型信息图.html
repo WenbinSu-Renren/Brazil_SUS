@@ -1,0 +1,498 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>巴西统一医疗系统 (SUS) 数字化转型信息图</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+SC:wght@400;700&display=swap" rel="stylesheet">
+    <style>
+        body {
+            font-family: 'Noto Sans SC', sans-serif;
+            background-color: #F7FAFC; /* Tailwind gray-100 */
+        }
+        .chart-container {
+            position: relative;
+            width: 100%;
+            max-width: 600px; /* 示例最大宽度，可根据需要调整 */
+            margin-left: auto;
+            margin-right: auto;
+            height: 300px; /* 基础高度 */
+            max-height: 400px; /* 最大高度 */
+        }
+        @media (min-width: 768px) {
+            .chart-container {
+                height: 350px;
+            }
+        }
+        .text-dark-slate-blue { color: #073B4C; }
+        .bg-dark-slate-blue { background-color: #073B4C; }
+        .text-cerulean-blue { color: #118AB2; }
+        .bg-cerulean-blue { background-color: #118AB2; }
+        .text-turquoise-green { color: #06D6A0; }
+        .bg-turquoise-green { background-color: #06D6A0; }
+        .text-sunny-yellow { color: #FFD166; }
+        .bg-sunny-yellow { background-color: #FFD166; }
+        .text-coral-red { color: #FF6B6B; }
+        .bg-coral-red { background-color: #FF6B6B; }
+
+        .section-title {
+            font-size: 2.25rem; /* text-4xl */
+            font-weight: 700;
+            color: #073B4C; /* Dark Slate Blue */
+            margin-bottom: 1.5rem; /* mb-6 */
+            text-align: center;
+        }
+        .sub-section-title {
+            font-size: 1.5rem; /* text-2xl */
+            font-weight: 700;
+            color: #118AB2; /* Cerulean Blue */
+            margin-top: 2rem; /* mt-8 */
+            margin-bottom: 1rem; /* mb-4 */
+        }
+        .card {
+            background-color: white;
+            border-radius: 0.5rem; /* rounded-lg */
+            box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06); /* shadow-md */
+            padding: 1.5rem; /* p-6 */
+            margin-bottom: 1.5rem; /* mb-6 */
+        }
+        .big-stat-value {
+            font-size: 3rem; /* text-5xl */
+            font-weight: 700;
+            color: #06D6A0; /* Turquoise Green */
+        }
+        .big-stat-label {
+            font-size: 1rem; /* text-base */
+            color: #073B4C; /* Dark Slate Blue */
+            margin-top: 0.5rem; /* mt-2 */
+        }
+        .flowchart-step {
+            background-color: #E0F2FE; /* Tailwind blue-100 (近似) */
+            border: 2px solid #118AB2; /* Cerulean Blue */
+            color: #073B4C; /* Dark Slate Blue */
+            padding: 1rem;
+            border-radius: 0.5rem;
+            text-align: center;
+            margin: 0.5rem;
+            min-width: 150px;
+        }
+        .flowchart-arrow {
+            font-size: 2rem;
+            color: #118AB2; /* Cerulean Blue */
+            margin: 0 0.5rem;
+            align-self: center;
+        }
+    </style>
+</head>
+<body class="text-dark-slate-blue">
+
+    <nav class="bg-dark-slate-blue text-white p-4 sticky top-0 z-50 shadow-lg hidden md:block">
+        <div class="container mx-auto flex justify-around">
+            <a href="#intro" class="hover:text-sunny-yellow">引言</a>
+            <a href="#sus-basics" class="hover:text-sunny-yellow">SUS概览</a>
+            <a href="#digital-journey" class="hover:text-sunny-yellow">数字化征程</a>
+            <a href="#interoperability" class="hover:text-sunny-yellow">互操作性</a>
+            <a href="#borderless-doctor" class="hover:text-sunny-yellow">“医无界”愿景</a>
+            <a href="#recommendations" class="hover:text-sunny-yellow">战略建议</a>
+        </div>
+    </nav>
+
+    <div class="container mx-auto p-4 md:p-8">
+
+        <section id="intro" class="py-8 md:py-16">
+            <h1 class="text-4xl md:text-5xl font-bold text-center mb-6 text-cerulean-blue">巴西统一医疗系统 (SUS)</h1>
+            <h2 class="text-2xl md:text-3xl font-bold text-center mb-8 text-dark-slate-blue">数字化转型与互操作性：迈向全民健康覆盖的未来</h2>
+            <p class="text-lg text-center max-w-3xl mx-auto mb-6">
+                本报告深入分析巴西统一医疗系统（SUS）的结构、当前数字化水平以及在加强公立与私立医疗机构互操作性方面的具体需求。我们将探讨先进数字解决方案如何在SUS框架内改善护理协调、慢性病管理和健康数据分析，共同展望一个由数据驱动、高效协同的巴西医疗未来。
+            </p>
+        </section>
+
+        <section id="sus-basics" class="py-8">
+            <h2 class="section-title">SUS概览：统一医疗系统的基石</h2>
+            <p class="text-center max-w-3xl mx-auto mb-12 text-lg">
+                巴西统一医疗系统（SUS）是全球规模最大的公共卫生系统之一，基于普遍性、综合性和公平性等核心原则，旨在为所有公民提供全面的医疗服务。其去中心化的三级管理结构和独特的筹资机制，共同构成了这一庞大系统的运作基础。
+            </p>
+
+            <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 mb-12">
+                <div class="card">
+                    <h3 class="sub-section-title text-turquoise-green">📜 核心原则</h3>
+                    <ul class="list-disc list-inside space-y-2">
+                        <li><strong>普遍性 (Universality):</strong> 健康是所有公民的基本权利。</li>
+                        <li><strong>综合性 (Comprehensiveness):</strong> 提供从预防到康复的全面照护。</li>
+                        <li><strong>公平性 (Equity):</strong> 致力于解决健康不平等问题。</li>
+                        <li><strong>去中心化 (Decentralization):</strong> 联邦、州、市三级分工负责。</li>
+                        <li><strong>社会参与 (Social Participation):</strong> 社区参与卫生政策制定与监督。</li>
+                    </ul>
+                    <p class="mt-4 text-sm">这些原则不仅塑造了SUS的运营，也指导其数字化转型方向，确保技术进步惠及全民。</p>
+                </div>
+
+                <div class="card">
+                    <h3 class="sub-section-title text-turquoise-green">🏛️ 三级管理架构</h3>
+                    <div class="space-y-3">
+                        <div class="p-3 bg-cerulean-blue text-white rounded-md text-center"><strong>联邦政府 (卫生部):</strong> 国家协调、政策、规划</div>
+                        <div class="text-center text-2xl text-cerulean-blue">↓</div>
+                        <div class="p-3 bg-cerulean-blue text-white rounded-md text-center"><strong>州政府 (州卫生厅):</strong> 区域治理、专业服务</div>
+                        <div class="text-center text-2xl text-cerulean-blue">↓</div>
+                        <div class="p-3 bg-cerulean-blue text-white rounded-md text-center"><strong>市政府 (市卫生局):</strong> 地方管理、直接服务</div>
+                    </div>
+                    <p class="mt-4 text-sm">这种去中心化结构旨在提高响应能力，但也为全国性数字健康战略的统一实施带来挑战。</p>
+                </div>
+
+                <div class="card">
+                    <h3 class="sub-section-title text-turquoise-green">💰 筹资机制与挑战</h3>
+                    <p class="mb-2">SUS资金主要来自三级政府税收，法定最低贡献比例分别为：</p>
+                    <ul class="list-none space-y-1 mb-3">
+                        <li>联邦：净经常性收入的15%</li>
+                        <li>州：总收入的12%</li>
+                        <li>市：总收入的15% (实际平均近24%)</li>
+                    </ul>
+                    <div class="chart-container h-48 md:h-56">
+                        <canvas id="fundingChart"></canvas>
+                    </div>
+                    <p class="mt-4 text-sm">尽管有法定投入，SUS仍面临资源配置效率低下、资金缺口等挑战，影响数字化投入。</p>
+                </div>
+            </div>
+        </section>
+
+        <section id="digital-journey" class="py-8 bg-white">
+            <div class="container mx-auto px-4">
+                <h2 class="section-title">数字化征程：迈向互联互通</h2>
+                <p class="text-center max-w-3xl mx-auto mb-12 text-lg">
+                    在国家数字健康战略（ESD28）的指引下，巴西正积极推进医疗数字化转型。一系列关键举措，如国家医疗数据网络（RNDS）、“我的数字SUS”应用和基础医疗信息化战略（e-SUS APS），正逐步构建一个更整合、高效的医疗信息生态。
+                </p>
+
+                <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 mb-12">
+                    <div class="card transform hover:scale-105 transition-transform duration-300">
+                        <div class="flex items-center mb-3">
+                            <span class="text-3xl mr-3">🗺️</span>
+                            <h3 class="sub-section-title text-coral-red mt-0 mb-0">国家数字健康战略 (ESD28)</h3>
+                        </div>
+                        <p>指导2020-2028年行动，旨在系统化数字健康工作，三大支柱包括：卫生部行动、合作法规制定、合作空间实施。强调公私部门整合。</p>
+                    </div>
+                    <div class="card transform hover:scale-105 transition-transform duration-300">
+                        <div class="flex items-center mb-3">
+                            <span class="text-3xl mr-3">🔗</span>
+                            <h3 class="sub-section-title text-coral-red mt-0 mb-0">国家医疗数据网络 (RNDS)</h3>
+                        </div>
+                        <p>全国性数据交换平台，采用区块链技术，目标到2028年成为主要平台，整合公私部门健康数据，促进护理连续性。</p>
+                    </div>
+                    <div class="card transform hover:scale-105 transition-transform duration-300">
+                        <div class="flex items-center mb-3">
+                            <span class="text-3xl mr-3">📱</span>
+                            <h3 class="sub-section-title text-coral-red mt-0 mb-0">我的数字SUS (Meu SUS Digital)</h3>
+                        </div>
+                        <p>原“连接SUS”，为公民提供移动应用，查询病历、疫苗、检查结果等，数据来自RNDS，赋能患者参与。</p>
+                    </div>
+                    <div class="card transform hover:scale-105 transition-transform duration-300 md:col-span-2 lg:col-span-1">
+                         <div class="flex items-center mb-3">
+                            <span class="text-3xl mr-3">🏥</span>
+                            <h3 class="sub-section-title text-coral-red mt-0 mb-0">基础医疗信息化 (e-SUS APS)</h3>
+                        </div>
+                        <p>重构基础医疗信息管理，提供免费电子公民病历(PEC)，支持市政府有效管理基础医疗服务。</p>
+                    </div>
+                     <div class="card md:col-span-2 lg:col-span-2">
+                        <h3 class="sub-section-title text-coral-red">📊 电子病历(EHR)采用现状与市场</h3>
+                        <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                            <div>
+                                <p class="text-center"><span class="big-stat-value">82%</span></p>
+                                <p class="big-stat-label text-center">医疗机构采用电子系统 (2019年)</p>
+                                <p class="text-center mt-2"><span class="big-stat-value">70%</span></p>
+                                <p class="big-stat-label text-center">市已采纳SUS数字计划 (截至2024年)</p>
+                            </div>
+                            <div class="chart-container h-56 md:h-64">
+                                <canvas id="ehrMarketChart"></canvas>
+                            </div>
+                        </div>
+                        <p class="mt-4 text-sm">EHR市场预计增长，但面临数字鸿沟、基础设施不足、人力资源短缺和数据标准化等挑战。</p>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <section id="interoperability" class="py-8">
+            <h2 class="section-title">互操作性：弥合公私鸿沟</h2>
+            <p class="text-center max-w-3xl mx-auto mb-12 text-lg">
+                实现公立（SUS）与私立医疗机构之间的数据无缝交换，即互操作性，是提升巴西整体医疗服务质量、效率和连续性的核心。然而，这一目标的实现面临着技术、语义、组织治理及监管等多重挑战。
+            </p>
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-8">
+                <div class="card">
+                    <h3 class="sub-section-title text-sunny-yellow">🚧 主要挑战</h3>
+                    <ul class="space-y-3">
+                        <li><strong class="text-coral-red">技术壁垒:</strong> 系统多样性、遗留系统整合、标准实施不一、连接性差。</li>
+                        <li><strong class="text-coral-red">语义壁垒:</strong> 数据含义理解不一，需标准化词汇。</li>
+                        <li><strong class="text-coral-red">组织/治理:</strong> 缺乏信任、政治不稳定、沟通不畅、缺乏强制法规。</li>
+                        <li><strong class="text-coral-red">监管/LGPD:</strong> 《通用数据保护法》合规复杂性。</li>
+                        <li><strong class="text-coral-red">其他:</strong> 资金限制、缺乏专业人才、数字鸿沟。</li>
+                    </ul>
+                </div>
+                <div class="card">
+                    <h3 class="sub-section-title text-sunny-yellow">💡 关键驱动因素与项目</h3>
+                    <p class="mb-3"><strong>标准化努力:</strong></p>
+                    <ul class="list-disc list-inside space-y-1 mb-4">
+                        <li>RNDS互操作性标准 (语义与句法)</li>
+                        <li>采用国际标准: HL7 FHIR, openEHR, SNOMED-CT, LOINC</li>
+                        <li>TISS标准 (私营补充医疗)</li>
+                    </ul>
+                    <p class="mb-3"><strong>治理与政策:</strong></p>
+                     <ul class="list-disc list-inside space-y-1 mb-4">
+                        <li>ESD28合作框架</li>
+                        <li>SEIDIGI (信息与数字健康秘书处) 指导</li>
+                        <li>探索“开放健康”系统</li>
+                    </ul>
+                    <p class="mb-2"><strong>先驱试点项目:</strong></p>
+                    <div class="p-3 bg-turquoise-green text-white rounded-md mb-2"><strong>PROADI-SUS IPS:</strong> 开发巴西版国际患者摘要，采用HL7 FHIR。</div>
+                    <div class="p-3 bg-turquoise-green text-white rounded-md"><strong>库里蒂巴乳腺癌数字旅程:</strong> 促进SUS系统间数据交换，改善乳腺癌管理。</div>
+                </div>
+            </div>
+        </section>
+
+        <section id="borderless-doctor" class="py-8 bg-white">
+            <div class="container mx-auto px-4">
+                <h2 class="section-title">“医无界”愿景：赋能未来医疗</h2>
+                <p class="text-center max-w-3xl mx-auto mb-12 text-lg">
+                    “医无界”代表一种综合性、可互操作的数字健康平台概念，旨在整合远程医疗、电子病历、物联网设备和人工智能分析等工具，实现跨机构、跨层级的无缝护理，特别关注改善护理协调、慢性病管理和健康数据分析。
+                </p>
+                <div class="grid grid-cols-1 md:grid-cols-3 gap-6 mb-12">
+                    <div class="card text-center">
+                        <span class="text-5xl">🤝</span>
+                        <h3 class="sub-section-title text-cerulean-blue mt-2">提升护理协调</h3>
+                        <p>通过远程医疗、共享护理计划、简化转诊流程和实时信息共享，改善跨机构协作。</p>
+                    </div>
+                    <div class="card text-center">
+                        <span class="text-5xl">❤️</span>
+                        <h3 class="sub-section-title text-cerulean-blue mt-2">变革慢性病管理</h3>
+                        <p>利用远程患者监测(RPM)、个性化AI干预、患者参与工具，实现主动预防和个性化管理。</p>
+                    </div>
+                    <div class="card text-center">
+                        <span class="text-5xl">📈</span>
+                        <h3 class="sub-section-title text-cerulean-blue mt-2">释放数据分析潜能</h3>
+                        <p>支持流行病学监测、资源优化、预测建模、绩效改进和科研创新，构建数据驱动的卫生系统。</p>
+                    </div>
+                </div>
+
+                <div class="card">
+                    <h3 class="sub-section-title text-cerulean-blue">🌟 案例分析：Galileu Health 的启示</h3>
+                    <p class="mb-4">Galileu Health作为巴西本土解决方案，展示了类似“医无界”平台在整合数字工具、协调医疗系统方面的潜力，为公立和私立部门带来了实际效益：</p>
+                    <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                        <ul class="list-disc list-inside space-y-2">
+                            <li>提高医疗服务可及性，尤其在偏远地区。</li>
+                            <li>实现持续监测 (圣保罗首年57万患者加入)。</li>
+                            <li>改善预防效果 (房颤患者中预防240例中风)。</li>
+                        </ul>
+                        <div class="chart-container h-64 md:h-72">
+                            <canvas id="galileuHealthChart"></canvas>
+                        </div>
+                    </div>
+                     <p class="mt-4 text-sm">然而，成功实施此类平台不仅需要技术，更需服务模式的根本转变和强有力的数据治理。</p>
+                </div>
+            </div>
+        </section>
+
+        <section id="recommendations" class="py-8">
+            <h2 class="section-title">战略建议：加速数字化转型</h2>
+            <p class="text-center max-w-3xl mx-auto mb-12 text-lg">
+                为加速巴西数字健康的进程，充分发挥其潜力，并有效整合公私医疗资源，本报告提出以下关键战略建议，涵盖政策治理、技术基建、能力建设及创新合作等多个维度。
+            </p>
+            <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
+                <div class="card">
+                    <h3 class="sub-section-title text-turquoise-green">📜 政策与治理</h3>
+                    <ul class="list-disc list-inside space-y-1">
+                        <li>强化SEIDIGI监管角色，强制推行统一标准。</li>
+                        <li>明确LGPD合规路径，增强法律确定性。</li>
+                        <li>建国家级健康数据治理框架。</li>
+                        <li>审慎推进“开放健康”政策。</li>
+                    </ul>
+                </div>
+                <div class="card">
+                    <h3 class="sub-section-title text-turquoise-green">💻 技术与基础设施</h3>
+                    <ul class="list-disc list-inside space-y-1">
+                        <li>持续投入RNDS建设。</li>
+                        <li>优先发展基层数字基础设施，缩小数字鸿沟。</li>
+                        <li>推广HL7 FHIR、openEHR等国际标准。</li>
+                        <li>支持国家级术语和数据字典。</li>
+                    </ul>
+                </div>
+                <div class="card">
+                    <h3 class="sub-section-title text-turquoise-green">👥 能力建设与参与</h3>
+                    <ul class="list-disc list-inside space-y-1">
+                        <li>加强专业人员数字技能培训。</li>
+                        <li>提升公民数字素养。</li>
+                        <li>促进多方对话与协作，建立信任。</li>
+                    </ul>
+                </div>
+                <div class="card">
+                    <h3 class="sub-section-title text-turquoise-green">🚀 促进PPP与创新</h3>
+                    <ul class="list-disc list-inside space-y-1">
+                        <li>明确PPP框架与激励机制。</li>
+                        <li>支持并推广成功试点项目。</li>
+                        <li>鼓励合乎伦理的AI与数据分析创新。</li>
+                    </ul>
+                </div>
+            </div>
+        </section>
+
+        <section id="conclusion" class="py-16 bg-dark-slate-blue text-white">
+            <div class="container mx-auto px-4 text-center">
+                <h2 class="text-3xl md:text-4xl font-bold mb-6">结语：规划数字化赋能的SUS未来</h2>
+                <p class="text-lg md:text-xl max-w-3xl mx-auto mb-8">
+                    巴西统一医疗系统（SUS）正通过战略性拥抱数字健康解决方案，迈向一个更具韧性、响应更迅速、以患者为中心的未来。这需要持续的政治意愿、战略投入和广泛协作，确保数字化惠益触及所有巴西人，最终为全民福祉做出更大贡献。
+                </p>
+                <a href="#intro" class="bg-sunny-yellow text-dark-slate-blue font-bold py-3 px-8 rounded-lg hover:bg-yellow-300 transition-colors duration-300 text-lg">返回顶部</a>
+            </div>
+        </section>
+
+    </div>
+
+    <footer class="text-center p-6 bg-gray-200 text-dark-slate-blue text-sm">
+        <p>&copy; 2024 巴西SUS数字化转型分析信息图。基于提供的研究报告生成。</p>
+        <p>信息图表内容仅供参考。</p>
+    </footer>
+
+    <script>
+        // 帮助函数：处理Chart.js标签换行
+        function formatLabel(str, maxLen = 16) {
+            if (typeof str !== 'string' || str.length <= maxLen) {
+                return str;
+            }
+            const words = str.split(' ');
+            const lines = [];
+            let currentLine = '';
+            for (const word of words) {
+                if ((currentLine + word).length > maxLen && currentLine.length > 0) {
+                    lines.push(currentLine.trim());
+                    currentLine = '';
+                }
+                currentLine += word + ' ';
+            }
+            if (currentLine.trim().length > 0) {
+                lines.push(currentLine.trim());
+            }
+            return lines.length > 0 ? lines : [str]; // 如果无法有效分割，返回原字符串数组
+        }
+
+        // Chart.js 通用工具提示配置
+        const tooltipTitleCallback = {
+            plugins: {
+                tooltip: {
+                    callbacks: {
+                        title: function(tooltipItems) {
+                            const item = tooltipItems[0];
+                            let label = item.chart.data.labels[item.dataIndex];
+                            if (Array.isArray(label)) {
+                              return label.join(' ');
+                            } else {
+                              return label;
+                            }
+                        }
+                    }
+                }
+            }
+        };
+
+        // 1. SUS筹资贡献图表
+        const fundingCtx = document.getElementById('fundingChart')?.getContext('2d');
+        if (fundingCtx) {
+            new Chart(fundingCtx, {
+                type: 'bar',
+                data: {
+                    labels: [formatLabel('联邦政府 (法定15%)'), formatLabel('州政府 (法定12%)'), formatLabel('市政府 (法定15%，实际~24%)')],
+                    datasets: [{
+                        label: '资金贡献比例',
+                        data: [15, 12, 24], // 使用实际估算值或更突出的值
+                        backgroundColor: ['#FF6B6B', '#FFD166', '#06D6A0'],
+                        borderColor: ['#FF6B6B', '#FFD166', '#06D6A0'],
+                        borderWidth: 1
+                    }]
+                },
+                options: {
+                    responsive: true,
+                    maintainAspectRatio: false,
+                    indexAxis: 'y',
+                    scales: {
+                        x: {
+                            beginAtZero: true,
+                            title: { display: true, text: '收入百分比 (%)' }
+                        }
+                    },
+                    ...tooltipTitleCallback
+                }
+            });
+        }
+
+        // 2. EHR市场增长图表
+        const ehrMarketCtx = document.getElementById('ehrMarketChart')?.getContext('2d');
+        if (ehrMarketCtx) {
+            new Chart(ehrMarketCtx, {
+                type: 'bar',
+                data: {
+                    labels: [formatLabel('当前市场价值'), formatLabel('预计2030年市场价值')],
+                    datasets: [{
+                        label: '巴西EHR市场价值 (亿美元)',
+                        data: [1.5, 2.0],
+                        backgroundColor: ['#118AB2', '#06D6A0'],
+                        borderColor: ['#118AB2', '#06D6A0'],
+                        borderWidth: 1
+                    }]
+                },
+                options: {
+                    responsive: true,
+                    maintainAspectRatio: false,
+                    scales: {
+                        y: {
+                            beginAtZero: true,
+                            title: { display: true, text: '价值 (亿美元)' }
+                        }
+                    },
+                    ...tooltipTitleCallback
+                }
+            });
+        }
+
+        // 3. Galileu Health 影响图表
+        const galileuHealthCtx = document.getElementById('galileuHealthChart')?.getContext('2d');
+        if (galileuHealthCtx) {
+            new Chart(galileuHealthCtx, {
+                type: 'bar',
+                data: {
+                    labels: [formatLabel('急诊就诊次数减少'), formatLabel('住院率减少'), formatLabel('月度医疗费用减少')],
+                    datasets: [{
+                        label: '影响百分比 (%)',
+                        data: [41, 35, 18],
+                        backgroundColor: ['#FF6B6B', '#FFD166', '#06D6A0'],
+                        borderColor: ['#FF6B6B', '#FFD166', '#06D6A0'],
+                        borderWidth: 1
+                    }]
+                },
+                options: {
+                    responsive: true,
+                    maintainAspectRatio: false,
+                    scales: {
+                        y: {
+                            beginAtZero: true,
+                            title: { display: true, text: '减少百分比 (%)' }
+                        }
+                    },
+                    ...tooltipTitleCallback
+                }
+            });
+        }
+
+        // 平滑滚动 (可选)
+        document.querySelectorAll('a[href^="#"]').forEach(anchor => {
+            anchor.addEventListener('click', function (e) {
+                e.preventDefault();
+                const targetId = this.getAttribute('href');
+                const targetElement = document.querySelector(targetId);
+                if (targetElement) {
+                    targetElement.scrollIntoView({
+                        behavior: 'smooth'
+                    });
+                }
+            });
+        });
+
+    </script>
+</body>
+</html>
